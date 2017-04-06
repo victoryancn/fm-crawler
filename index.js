@@ -56,7 +56,7 @@ const c = new Crawler({
               url: 'https://api.frontendmasters.com/v1/kabuki/video/' + lesson.statsId + '?r=1080&f=mp4',
             }))
               .on('progress', function (state) {
-                process.stdout.write("process：" + (state.percent / 100).toFixed(2) + '%   speed：' + (state.speed / 1024).toFixed(2) + 'kb/s  \r');
+                process.stdout.write("process：" + (state.percent * 100).toFixed(2) + '%   speed：' + (state.speed / 1024).toFixed(2) + 'kb/s  \r');
               })
               .on('end', function () {
                 done();
