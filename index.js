@@ -36,13 +36,13 @@ const c = new Crawler({
       });
       Promise.all(promises).then(function (videos) {
         console.log('request video data...done');
-        console.log('write video data...');
 
         fs.ensureDirSync('./download');
         fs.emptyDirSync('./download');
         console.log('start downloading...');
 
-        videos.forEach(function (item) {
+        forEach(videos, function (item) {
+          const videosDone = this.async();
           const video = JSON.parse(item);
           const videoPath = './download/' + video.slug;
           fs.ensureFileSync(videoPath + '/video.json');
@@ -59,6 +59,7 @@ const c = new Crawler({
             })
           }, function (notAborted, arr) {
             console.log("done", notAborted, arr);
+            videosDone();
           });
         })
       })
