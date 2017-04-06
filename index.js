@@ -41,7 +41,6 @@ const c = new Crawler({
         fs.ensureDirSync('./download');
         fs.emptyDirSync('./download');
         console.log('start downloading...');
-        console.log('start downloading...');
 
         videos.forEach(function (item) {
           const video = JSON.parse(item);
