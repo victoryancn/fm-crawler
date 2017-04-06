@@ -39,7 +39,7 @@ const c = new Crawler({
         console.log('request video data...done');
 
         fs.ensureDirSync('./download');
-        fs.emptyDirSync('./download');
+        // fs.emptyDirSync('./download');
         console.log('start downloading...');
 
         forEach(videos, function (item) {
@@ -52,6 +52,11 @@ const c = new Crawler({
             const done = this.async();
             const filepath = videoPath + '/' + lesson.index + '.' + lesson.title + '.mp4';
             console.log('downloading ' + lesson.index + '.' + lesson.title + '.mp4');
+            if (fs.existsSync(filepath)) {
+              done();
+              return;
+            }
+            fs.ensureFileSync(filepath);
             progress(request({
               url: 'https://api.frontendmasters.com/v1/kabuki/video/' + lesson.statsId + '?r=1080&f=mp4',
             }))
@@ -63,7 +68,7 @@ const c = new Crawler({
               })
               .pipe(fs.createWriteStream(filepath));
           }, function (notAborted, arr) {
-            console.log("done", notAborted, arr);
+            // console.log("done", notAborted, arr);
             videosDone();
           });
         })
