@@ -7,6 +7,7 @@ const url = require('url');
 const request = require('request');
 const fs = require('fs-extra');
 const forEach = require('async-foreach').forEach;
+const progress = require('request-progress');
 
 const c = new Crawler({
   maxConnections: 10,
@@ -51,12 +52,16 @@ const c = new Crawler({
             const done = this.async();
             const filepath = videoPath + '/' + lesson.index + '.' + lesson.title + '.mp4';
             console.log('downloading ' + lesson.index + '.' + lesson.title + '.mp4');
-            const stream = request({
+            progress(request({
               url: 'https://api.frontendmasters.com/v1/kabuki/video/' + lesson.statsId + '?r=1080&f=mp4',
-            }).pipe(fs.createWriteStream(filepath));
-            stream.on('finish', function () {
-              done();
-            })
+            }))
+              .on('progress', function (state) {
+                process.stdout.write("process：" + state.percent.toFixed(2) + '% \n  speed：' + (state.speed / 1024).toFixed(2) + 'kb/s  \r');
+              })
+              .on('end', function () {
+                done();
+              })
+              .pipe(fs.createWriteStream(filepath));
           }, function (notAborted, arr) {
             console.log("done", notAborted, arr);
             videosDone();
