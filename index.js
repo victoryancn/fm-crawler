@@ -63,6 +63,9 @@ const c = new Crawler({
               .on('progress', function (state) {
                 process.stdout.write("process：" + (state.percent * 100).toFixed(2) + '%   speed：' + (state.speed / 1024).toFixed(2) + 'kb/s  \r');
               })
+              .on('error', function () {
+                fs.removeSync(filepath);
+              })
               .on('end', function () {
                 done();
               })
